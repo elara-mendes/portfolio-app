@@ -1,10 +1,7 @@
-import os
-from itertools import islice
-
 import streamlit as st
 import csv
 
-st.set_page_config("wide")
+st.set_page_config(page_title="Home", page_icon="🥸")
 
 co1, col2 = st.columns(2)
 
@@ -22,26 +19,21 @@ with col2:
 
 st.write("Below you can find the projects that I'm working on, feel free to contact me.")
 
-images_folder = "images"
+col3, empty_col, col4 = st.columns([1.5, 0.7, 1.5])
 
-col3, col4 = st.columns(2)
+with open("data.csv", "r") as file:
+    reader = list(csv.DictReader(file, delimiter=";"))
 
 with col3:
-    with open("data.csv", "r") as file:
-        reader = list(csv.DictReader(file, delimiter=";"))
-        for row in reader[:10]:
-            st.subheader(row["title"])
-            st.write(row["description"])
-            folder_path = os.path.join(images_folder, row["image"])
-            st.image(folder_path)
-            st.markdown(f"[Source Code]({row['url']})")
+    for row in reader[:10]:
+        st.header(row["title"])
+        st.write(row["description"])
+        st.image("images/" + row["image"])
+        st.write(f"[Source Code]({row['url']})") # Don't even need markdown here
 
 with col4:
-    with open("data.csv", "r") as file:
-        reader = list(csv.DictReader(file, delimiter=";"))
-        for row in reader[10:]:
-            st.subheader(row["title"])
-            st.write(row["description"])
-            folder_path = os.path.join(images_folder, row["image"])
-            st.image(folder_path)
-            st.markdown(f"[Source Code]({row['url']})")
+    for row in reader[10:]:
+        st.header(row["title"])
+        st.write(row["description"])
+        st.image("images/" + row["image"]) # Much better and simple
+        st.write(f"[Source Code]({row['url']})")
